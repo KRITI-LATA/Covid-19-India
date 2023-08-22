@@ -5,7 +5,7 @@ const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
 
 const app = express();
-module.exports = express();
+module.exports = app;
 app.use(express.json());
 
 const dbPath = path.join(__dirname, "covid19India.db");
@@ -68,10 +68,10 @@ app.get("/states/:stateId/", async (request, response) => {
 
 app.post("/districts/", async (request, response) => {
   const casesDetail = request.body;
-  const { districtName, cases, cured, active, deaths } = casesDetail;
+  const { districtName, stateId, cases, cured, active, deaths } = casesDetail;
   const casesDetailQuery = `insert into district (district_name, 
-        cases, cured, active, deaths) values ('${districtName}', 
-        '${cases}', '${cured}', '${active}', '${deaths}');`;
+      state_id,  cases, cured, active, deaths) values ('${districtName}', 
+       ${stateId}, '${cases}', '${cured}', '${active}', '${deaths}');`;
   const dbResponse = await db.run(casesDetailQuery);
   const districtId = dbResponse.lastID;
   response.send("District Successfully Added");
